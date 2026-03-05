@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+/* Dark mode por classe no elemento raiz (controle manual pelo usuário) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+html, body, #root {
+  min-height: 100%;
+}
