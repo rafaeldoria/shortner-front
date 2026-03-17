@@ -1,7 +1,8 @@
 import { api } from '../api';
 
 export interface RegisterParams {
-  login: string;
+  username: string;
+  email: string;
   password: string;
 }
 
