@@ -27,6 +27,8 @@ function LinkIcon({ className }: { className?: string }) {
   );
 }
 
+const shortnerBaseUrl = import.meta.env.VITE_SHORTNER_URL ?? "";
+
 /** Listagem no estilo Receipt Card: card com título "Urls" e linhas code / originalUrl. */
 export default function UrlListCard({ urls }: UrlListCardProps) {
   return (
@@ -56,8 +58,8 @@ export default function UrlListCard({ urls }: UrlListCardProps) {
                 <span className="text-sm font-medium tracking-tight text-gray-600 dark:text-gray-300 shrink-0">
                   Code
                 </span>
-                <span className="text-sm font-medium text-gray-900 dark:text-gray-100 text-right truncate min-w-0" title={item.code}>
-                  {item.code}
+                <span className="text-sm font-medium text-gray-900 dark:text-gray-100 text-right truncate min-w-0" title={`${shortnerBaseUrl}${item.code}`}>
+                  {shortnerBaseUrl}{item.code}
                 </span>
               </div>
               <div className="flex justify-between items-center gap-4">
