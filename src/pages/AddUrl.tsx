@@ -33,8 +33,11 @@ export default function AddUrl() {
         return;
       }
       setError("Erro ao salvar. Tente novamente.");
-    } catch {
-      setError("Erro ao salvar. Tente novamente.");
+    } catch (err) {
+      const axiosError = err as { response?: { data?: { message?: string } } };
+      const apiMessage = axiosError?.response?.data?.message;
+
+      setError(apiMessage ?? "Erro ao salvar. Tente novamente.");
     } finally {
       setLoading(false);
     }
