@@ -11,6 +11,10 @@ interface UrlListCardProps {
 
 const shortnerBaseUrl = import.meta.env.VITE_SHORTNER_URL ?? "";
 
+function getShortUrl(code: string) {
+  return `${shortnerBaseUrl.replace(/\/?$/, "/")}${code}`;
+}
+
 /** Listagem no estilo Receipt Card: card com título "Urls" e linhas code / originalUrl. */
 export default function UrlListCard({ urls }: UrlListCardProps) {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
@@ -50,12 +54,12 @@ export default function UrlListCard({ urls }: UrlListCardProps) {
                   Code
                 </span>
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100 text-right truncate min-w-0" title={`${shortnerBaseUrl}${item.code}`}>
-                    {shortnerBaseUrl}{item.code}
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100 text-right truncate min-w-0" title={getShortUrl(item.code)}>
+                    {getShortUrl(item.code)}
                   </span>
                   <button
                     type="button"
-                    onClick={() => handleCopy(`${shortnerBaseUrl}${item.code}`, item.code)}
+                    onClick={() => handleCopy(getShortUrl(item.code), item.code)}
                     className="shrink-0 p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     aria-label="Copiar URL encurtada"
                   >
