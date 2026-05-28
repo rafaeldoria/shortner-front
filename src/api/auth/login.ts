@@ -7,6 +7,7 @@ export interface LoginParams {
 
 export interface LoginResponse {
   token: string;
+  username: string;
 }
 
 export const login = (data: LoginParams) =>

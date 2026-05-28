@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type SubmitEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
-import { setToken } from "../api/api";
+import { getApiError, setSession } from "../api/api";
 import { login as loginApi, testConnection } from "../api/auth";
 import { loginSchema, type LoginFormData } from "../schemas/authSchema";
 
@@ -18,7 +18,7 @@ export default function Login() {
   });
   const [errors, setErrors] = useState<FieldErrors>({});
   const [connectionStatus, setConnectionStatus] = useState<string | null>(null);
-  const [loginStatus, setLoginStatus] = useState<"success" | "error" | null>(null);
+  const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleTestConnection = async () => {
@@ -42,7 +42,7 @@ export default function Login() {
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
-    setLoginStatus(null);
+    setLoginError(null);
 
     const result = loginSchema.safeParse(formData);
     if (!result.success) {
@@ -64,13 +64,19 @@ export default function Login() {
         password: formData.password,
       });
       if (data.token) {
-        setToken(data.token);
+        setSession(data.token, data.username);
         navigate("/home", { replace: true });
         return;
       }
-      setLoginStatus("success");
-    } catch {
-      setLoginStatus("error");
+      setLoginError("Error login");
+    } catch (err: unknown) {
+      const apiError = getApiError(err);
+
+      setLoginError(
+        apiError.status === 403 && apiError.message
+          ? apiError.message
+          : "Error login",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -190,11 +196,9 @@ export default function Login() {
           </button>
         </div>
 
-        {loginStatus && (
-          <p
-            className={`mt-4 text-sm font-medium ${loginStatus === "success" ? "text-green-600 dark:text-green-400" : "text-red-500"}`}
-          >
-            {loginStatus === "success" ? "Successfully login" : "Error login"}
+        {loginError && (
+          <p className="mt-4 text-sm font-medium text-red-500">
+            {loginError}
           </p>
         )}
         <button

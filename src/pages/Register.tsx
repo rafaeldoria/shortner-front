@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent, type SubmitEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
+import { getApiError } from "../api/api";
 import { register } from "../api/auth";
 import { registerSchema } from "../schemas/authSchema";
 
@@ -62,11 +63,7 @@ export default function Register() {
       });
       navigate("/");
     } catch (err: unknown) {
-      const message =
-        err && typeof err === "object" && "response" in err
-          ? (err as { response?: { data?: { message?: string } } }).response?.data
-              ?.message
-          : null;
+      const { message } = getApiError(err);
       setSubmitError(message ?? "Erro ao cadastrar. Tente novamente.");
     } finally {
       setIsLoading(false);
