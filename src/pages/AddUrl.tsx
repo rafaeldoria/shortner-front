@@ -1,7 +1,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
-import { getToken } from "../api/api";
+import { getApiError, getToken } from "../api/api";
 import { createUrl } from "../api/shortener";
 
 export default function AddUrl() {
@@ -33,18 +33,16 @@ export default function AddUrl() {
         return;
       }
       setError("Erro ao salvar. Tente novamente.");
-    } catch (err) {
-      const axiosError = err as { response?: { data?: { message?: string } } };
-      const apiMessage = axiosError?.response?.data?.message;
-
-      setError(apiMessage ?? "Erro ao salvar. Tente novamente.");
+    } catch (err: unknown) {
+      const { message } = getApiError(err);
+      setError(message ?? "Erro ao salvar. Tente novamente.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <AppLayout>
+    <AppLayout authenticated>
       <div className="w-full max-w-2xl flex flex-col items-center">
         <div className="w-full rounded-2xl overflow-hidden shadow-lg border bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700">
           <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/80">
