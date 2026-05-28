@@ -1,23 +1,28 @@
 import { z } from "zod";
 
+export const REUSED_PASSWORD_MESSAGE =
+  "New password must be different from current password";
+
+export const passwordSchema = z
+  .string()
+  .min(6, { error: "Password must be at least 6 characters" })
+  .refine((val) => /[a-zA-Z]/.test(val), {
+    error: "Password must be at least 1 letter",
+  })
+  .refine((val) => /\d/.test(val), {
+    error: "Password must be at least 1 number",
+  })
+  .refine((val) => /[^a-zA-Z0-9]/.test(val), {
+    error: "Password must be at least 1 special character",
+  });
+
 export const registerSchema = z.object({
   username: z
     .string()
     .min(3, { error: "Username must be at least 3 characters" })
     .max(20, { error: "Username must be only 20 characters" }),
   email: z.string().email({ error: "Invalid email" }),
-  password: z
-    .string()
-    .min(6, { error: "Password must be at least 6 characters" })
-    .refine((val) => /[a-zA-Z]/.test(val), {
-      error: "Password must be at least 1 letter",
-    })
-    .refine((val) => /\d/.test(val), {
-      error: "Password must be at least 1 number",
-    })
-    .refine((val) => /[^a-zA-Z0-9]/.test(val), {
-      error: "Password must be at least 1 special character",
-    }),
+  password: passwordSchema,
 });
 
 export type RegisterFormData = z.infer<typeof registerSchema>;
@@ -28,3 +33,20 @@ export const loginSchema = z.object({
 });
 
 export type LoginFormData = z.infer<typeof loginSchema>;
+
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, { error: "Current password is required" }),
+    newPassword: passwordSchema,
+    confirmPassword: z.string().min(1, { error: "Password confirmation is required" }),
+  })
+  .refine((data) => data.newPassword !== data.currentPassword, {
+    error: REUSED_PASSWORD_MESSAGE,
+    path: ["newPassword"],
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    error: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
