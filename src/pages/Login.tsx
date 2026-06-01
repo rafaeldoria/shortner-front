@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent, type SubmitEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
 import { getApiError, setSession } from "../api/api";
 import { login as loginApi, testConnection } from "../api/auth";
@@ -12,6 +12,8 @@ interface FieldErrors {
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
@@ -20,6 +22,21 @@ export default function Login() {
   const [connectionStatus, setConnectionStatus] = useState<string | null>(null);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const emailVerificationPending = Boolean(
+    (location.state as { emailVerificationPending?: boolean } | null)
+      ?.emailVerificationPending,
+  );
+  const verifiedStatus = searchParams.get("verified");
+  const noticeMessage = emailVerificationPending
+    ? "Verifique sua caixa de e-mail para validar sua conta."
+    : verifiedStatus === "success"
+      ? "Conta validada com sucesso. Faça login para continuar."
+      : verifiedStatus === "error"
+        ? "Link de validação inválido ou expirado."
+        : null;
+  const noticeClass = verifiedStatus === "error"
+    ? "text-red-500"
+    : "text-green-600 dark:text-green-400";
 
   const handleTestConnection = async () => {
     setConnectionStatus(null);
@@ -95,6 +112,12 @@ export default function Login() {
         <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">
           Please sign in to continue
         </p>
+
+        {noticeMessage && (
+          <p className={`mt-4 text-sm font-medium ${noticeClass}`}>
+            {noticeMessage}
+          </p>
+        )}
 
         <button
           type="button"

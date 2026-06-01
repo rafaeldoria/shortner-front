@@ -61,7 +61,11 @@ export default function Register() {
         email: formData.email,
         password: formData.password,
       });
-      navigate("/");
+      navigate("/", {
+        state: {
+          emailVerificationPending: true,
+        },
+      });
     } catch (err: unknown) {
       const { message } = getApiError(err);
       setSubmitError(message ?? "Erro ao cadastrar. Tente novamente.");
