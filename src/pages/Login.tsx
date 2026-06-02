@@ -2,7 +2,7 @@ import { useState, type ChangeEvent, type SubmitEvent } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
 import { getApiError, setSession } from "../api/api";
-import { login as loginApi, testConnection } from "../api/auth";
+import { login as loginApi } from "../api/auth";
 import { loginSchema, type LoginFormData } from "../schemas/authSchema";
 
 interface FieldErrors {
@@ -19,7 +19,6 @@ export default function Login() {
     password: "",
   });
   const [errors, setErrors] = useState<FieldErrors>({});
-  const [connectionStatus, setConnectionStatus] = useState<string | null>(null);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const emailVerificationPending = Boolean(
@@ -37,16 +36,6 @@ export default function Login() {
   const noticeClass = verifiedStatus === "error"
     ? "text-red-500"
     : "text-green-600 dark:text-green-400";
-
-  const handleTestConnection = async () => {
-    setConnectionStatus(null);
-    try {
-      const { data } = await testConnection();
-      setConnectionStatus(data ?? "OK");
-    } catch {
-      setConnectionStatus("Erro na conexão");
-    }
-  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -116,21 +105,6 @@ export default function Login() {
         {noticeMessage && (
           <p className={`mt-4 text-sm font-medium ${noticeClass}`}>
             {noticeMessage}
-          </p>
-        )}
-
-        <button
-          type="button"
-          onClick={handleTestConnection}
-          className="mt-4 text-sm text-indigo-400 hover:underline"
-        >
-          Testar conexão
-        </button>
-        {connectionStatus && (
-          <p
-            className={`text-xs mt-1 ${connectionStatus === "Erro na conexão" ? "text-red-500" : "text-green-600 dark:text-green-400"}`}
-          >
-            {connectionStatus}
           </p>
         )}
 
