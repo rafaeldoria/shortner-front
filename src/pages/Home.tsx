@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
 import UrlListCard from "../components/UrlListCard";
-import { getToken } from "../api/api";
-import { getUrls } from "../api/shortener";
+import { getApiError, getToken } from "../api/api";
+import { deleteUrl, getUrls, updateUrl } from "../api/shortener";
 import type { UrlItem } from "../api/shortener";
 
 export default function Home() {
@@ -43,6 +43,34 @@ export default function Home() {
       .finally(() => setLoading(false));
   }, [navigate]);
 
+  async function handleUpdateUrl(code: string, originalUrl: string) {
+    try {
+      const res = await updateUrl(code, { originalUrl });
+      const updatedOriginalUrl = (res.data as Partial<UrlItem>).originalUrl ?? originalUrl;
+
+      setUrls((currentUrls) =>
+        currentUrls.map((url) =>
+          url.code === code
+            ? { ...url, originalUrl: updatedOriginalUrl }
+            : url,
+        ),
+      );
+    } catch (err: unknown) {
+      const { message } = getApiError(err);
+      throw new Error(message ?? "Erro ao salvar. Tente novamente.");
+    }
+  }
+
+  async function handleDeleteUrl(code: string) {
+    try {
+      await deleteUrl(code);
+      setUrls((currentUrls) => currentUrls.filter((url) => url.code !== code));
+    } catch (err: unknown) {
+      const { message } = getApiError(err);
+      throw new Error(message ?? "Erro ao deletar. Tente novamente.");
+    }
+  }
+
   if (loading) {
     return (
       <AppLayout authenticated>
@@ -62,7 +90,11 @@ export default function Home() {
         {error ? (
           <p className="text-red-500 text-sm">{error}</p>
         ) : (
-          <UrlListCard urls={urls} />
+          <UrlListCard
+            urls={urls}
+            onUpdateUrl={handleUpdateUrl}
+            onDeleteUrl={handleDeleteUrl}
+          />
         )}
       </div>
     </AppLayout>
