@@ -1,7 +1,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
-import { getApiError, getToken } from "../api/api";
+import { getApiError, hasSession } from "../api/api";
 import { changePassword } from "../api/auth";
 import {
   REUSED_PASSWORD_MESSAGE,
@@ -60,7 +60,7 @@ export default function ChangePassword() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!getToken()) navigate("/", { replace: true });
+    if (!hasSession()) navigate("/", { replace: true });
   }, [navigate]);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {

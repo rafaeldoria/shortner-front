@@ -69,8 +69,8 @@ export default function Login() {
         login: formData.email,
         password: formData.password,
       });
-      if (data.token) {
-        setSession(data.token, data.username);
+      if (data.username) {
+        setSession(data.username);
         navigate("/home", { replace: true });
         return;
       }

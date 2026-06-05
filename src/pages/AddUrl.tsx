@@ -1,7 +1,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
-import { getApiError, getToken } from "../api/api";
+import { getApiError, hasSession } from "../api/api";
 import { createUrl } from "../api/shortener";
 
 export default function AddUrl() {
@@ -11,7 +11,7 @@ export default function AddUrl() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!getToken()) navigate("/", { replace: true });
+    if (!hasSession()) navigate("/", { replace: true });
   }, [navigate]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
