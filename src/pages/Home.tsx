@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
 import UrlListCard from "../components/UrlListCard";
-import { getApiError, getToken } from "../api/api";
+import { clearSession, getApiError, hasSession } from "../api/api";
 import { deleteUrl, getUrls, updateUrl } from "../api/shortener";
 import type { UrlItem } from "../api/shortener";
 
@@ -25,8 +25,7 @@ export default function Home() {
   }, [location.pathname, location.state, navigate]);
 
   useEffect(() => {
-    const token = getToken();
-    if (!token) {
+    if (!hasSession()) {
       navigate("/", { replace: true });
       return;
     }
@@ -39,7 +38,17 @@ export default function Home() {
           setUrls((data as { urls: UrlItem[] }).urls);
         else setUrls([]);
       })
-      .catch(() => setError("Erro ao carregar URLs."))
+      .catch((err: unknown) => {
+        const { status } = getApiError(err);
+
+        if (status === 401) {
+          clearSession();
+          navigate("/", { replace: true });
+          return;
+        }
+
+        setError("Erro ao carregar URLs.");
+      })
       .finally(() => setLoading(false));
   }, [navigate]);
 
