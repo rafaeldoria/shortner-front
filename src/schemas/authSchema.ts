@@ -5,7 +5,10 @@ export const REUSED_PASSWORD_MESSAGE =
 
 export const passwordSchema = z
   .string()
-  .min(6, { error: "Password must be at least 6 characters" })
+  .min(8, { error: "Password must be at least 8 characters" })
+  .refine((val) => val.trim() === val, {
+    error: "Password must not start or end with spaces",
+  })
   .refine((val) => /[a-zA-Z]/.test(val), {
     error: "Password must be at least 1 letter",
   })
@@ -20,7 +23,10 @@ export const registerSchema = z.object({
   username: z
     .string()
     .min(3, { error: "Username must be at least 3 characters" })
-    .max(20, { error: "Username must be only 20 characters" }),
+    .max(64, { error: "Username must be at most 64 characters" })
+    .regex(/^[a-zA-Z0-9._-]+$/, {
+      error: "Username can only contain letters, numbers, dots, underscores and hyphens",
+    }),
   email: z.string().email({ error: "Invalid email" }),
   password: passwordSchema,
 });
