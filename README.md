@@ -1,4 +1,4 @@
-# Shortner Front
+# Shortener Front
 
 ## 1. Arquitetura do projeto
 
@@ -19,7 +19,7 @@ src/
 Fluxo principal:
 
 ```text
-Usuário -> Página -> Cliente HTTP -> Shortner Back
+Usuário -> Página -> Cliente HTTP -> Shortener Back
 ```
 
 ## 2. Como executar
@@ -32,7 +32,7 @@ cp .env.example .env
 ```
 
 Preencha o arquivo `.env` com a URL do backend (`VITE_API_URL`) e a URL pública
-usada nos links encurtados (`VITE_SHORTNER_URL`).
+usada nos links encurtados (`VITE_SHORTENER_URL`).
 
 Para executar em desenvolvimento:
 

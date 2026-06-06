@@ -14,10 +14,10 @@ interface UrlListCardProps {
   onDeleteUrl: (code: string) => Promise<void>;
 }
 
-const shortnerBaseUrl = import.meta.env.VITE_SHORTNER_URL ?? "";
+const shortenerBaseUrl = import.meta.env.VITE_SHORTENER_URL ?? "";
 
 function getShortUrl(code: string) {
-  return `${shortnerBaseUrl.replace(/\/?$/, "/")}${code}`;
+  return `${shortenerBaseUrl.replace(/\/?$/, "/")}${code}`;
 }
 
 /** Listagem no estilo Receipt Card: card com título "Urls" e linhas code / originalUrl. */
