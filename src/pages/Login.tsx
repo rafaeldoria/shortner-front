@@ -1,7 +1,7 @@
-import { useState, type ChangeEvent, type SubmitEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type SubmitEvent } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
-import { getApiError, setSession } from "../api/api";
+import { getApiError, hasSession, setSession } from "../api/api";
 import { login as loginApi } from "../api/auth";
 import { loginSchema, type LoginFormData } from "../schemas/authSchema";
 
@@ -36,6 +36,17 @@ export default function Login() {
   const noticeClass = verifiedStatus === "error"
     ? "text-red-500"
     : "text-green-600 dark:text-green-400";
+  const isAuthenticated = hasSession();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/home", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
+  if (isAuthenticated) {
+    return null;
+  }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
