@@ -32,10 +32,10 @@ export default function AddUrl() {
         navigate("/home", { replace: true });
         return;
       }
-      setError("Erro ao salvar. Tente novamente.");
+      setError("Error saving. Try again.");
     } catch (err: unknown) {
       const { message } = getApiError(err);
-      setError(message ?? "Erro ao salvar. Tente novamente.");
+      setError(message ?? "Error saving. Try again.");
     } finally {
       setLoading(false);
     }
@@ -78,13 +78,13 @@ export default function AddUrl() {
                 disabled={loading}
                 className="flex-1 h-11 rounded-full text-white bg-indigo-600 hover:bg-indigo-500 transition-colors disabled:opacity-70 disabled:cursor-not-allowed font-medium"
               >
-                {loading ? "Salvando..." : "Save"}
+                {loading ? "Saving..." : "Save"}
               </button>
               <Link
                 to="/home"
                 className="flex-1 h-11 rounded-full border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors font-medium flex items-center justify-center"
               >
-                Cancelar
+                Cancel
               </Link>
             </div>
           </form>

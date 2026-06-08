@@ -6,7 +6,7 @@ import { useTheme } from "../contexts/ThemeContext";
 
 interface AppLayoutProps {
   children: React.ReactNode;
-  /** Se true, centraliza o conteúdo (login/register). Se false, usa padding e deixa o conteúdo fluir (home). */
+  /** When true, centers auth content. Otherwise, pads and lets page content flow. */
   centered?: boolean;
   authenticated?: boolean;
 }
@@ -18,7 +18,7 @@ function ThemeButton() {
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={theme === "dark" ? "Ativar modo claro" : "Ativar modo escuro"}
+      aria-label={theme === "dark" ? "Enable light mode" : "Enable dark mode"}
       className="p-2.5 rounded-full bg-gray-200/80 hover:bg-gray-300/80 dark:bg-white/10 dark:hover:bg-white/20 transition-colors border border-gray-300/50 dark:border-white/10"
     >
       {theme === "dark" ? (
@@ -39,13 +39,14 @@ function ThemeButton() {
 export default function AppLayout({ children, centered = false, authenticated = false }: AppLayoutProps) {
   const navigate = useNavigate();
   const [loggingOut, setLoggingOut] = useState(false);
+  const username = getUsername();
 
   async function handleLogout() {
     setLoggingOut(true);
     try {
       await logout();
     } catch {
-      // O token local deve ser removido mesmo quando ja expirou no servidor.
+      // Local session must be cleared even when the server token has expired.
     } finally {
       clearSession();
       navigate("/", { replace: true });
@@ -65,7 +66,7 @@ export default function AppLayout({ children, centered = false, authenticated = 
       {authenticated ? (
         <nav className="w-full max-w-2xl mt-4 mb-8 px-4 py-3 rounded-2xl shadow-lg border bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 flex flex-wrap items-center justify-between gap-3">
           <span className="text-sm font-medium text-gray-700 dark:text-gray-200 truncate">
-            {getUsername()}
+            {username ? `Welcome ${username}` : "Welcome"}
           </span>
           <div className="flex items-center gap-2 sm:gap-3">
             <Link

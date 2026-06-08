@@ -20,7 +20,7 @@ function getShortUrl(code: string) {
   return `${shortenerBaseUrl.replace(/\/?$/, "/")}${code}`;
 }
 
-/** Listagem no estilo Receipt Card: card com título "Urls" e linhas code / originalUrl. */
+/** Receipt Card style listing with code and originalUrl rows. */
 export default function UrlListCard({
   urls,
   onUpdateUrl,
@@ -57,7 +57,7 @@ export default function UrlListCard({
     const trimmedUrl = draftUrl.trim();
 
     if (!trimmedUrl) {
-      setRowError({ code: item.code, message: "Informe uma URL válida." });
+      setRowError({ code: item.code, message: "Enter a valid URL." });
       return;
     }
 
@@ -75,7 +75,7 @@ export default function UrlListCard({
     } catch (error) {
       const message = error instanceof Error
         ? error.message
-        : "Erro ao salvar. Tente novamente.";
+        : "Error saving. Try again.";
       setRowError({ code: item.code, message });
     } finally {
       setSavingCode(null);
@@ -94,7 +94,7 @@ export default function UrlListCard({
     } catch (error) {
       const message = error instanceof Error
         ? error.message
-        : "Erro ao deletar. Tente novamente.";
+        : "Error deleting. Try again.";
       setRowError({ code: deleteCandidate.code, message });
       setDeleteCandidate(null);
     } finally {
@@ -113,7 +113,7 @@ export default function UrlListCard({
           <Link
             to="/home/add"
             className="inline-flex items-center justify-center text-white bg-cyan-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-full text-sm px-8 py-2.5 text-center leading-5 transition-colors"
-            aria-label="Adicionar URL"
+            aria-label="Add URL"
           >
             +
           </Link>
@@ -121,7 +121,7 @@ export default function UrlListCard({
         <div className="divide-y divide-gray-200 dark:divide-gray-600 bg-white dark:bg-gray-800">
           {urls.length === 0 ? (
             <div className="px-6 py-8 text-center text-gray-500 dark:text-gray-400 text-sm">
-              Nenhuma URL encurtada ainda.
+              No shortened URLs yet.
             </div>
           ) : (
             urls.map((item) => {
@@ -144,7 +144,7 @@ export default function UrlListCard({
                         type="button"
                         onClick={() => handleCopy(getShortUrl(item.code), item.code)}
                         className="shrink-0 p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                        aria-label="Copiar URL encurtada"
+                        aria-label="Copy shortened URL"
                       >
                         {copiedCode === item.code ? (
                           <CheckIcon className="text-green-500" />
@@ -188,7 +188,7 @@ export default function UrlListCard({
                             disabled={disabled}
                             className="text-xs font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            Cancelar
+                            Cancel
                           </button>
                         </>
                       ) : (
@@ -204,7 +204,7 @@ export default function UrlListCard({
                         onClick={() => isEditing ? handleSave(item) : startEdit(item)}
                         disabled={disabled}
                         className="shrink-0 p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        aria-label={isEditing ? "Salvar URL original" : "Editar URL original"}
+                        aria-label={isEditing ? "Save original URL" : "Edit original URL"}
                       >
                         {isEditing ? (
                           <SaveIcon className="text-blue-500 hover:text-blue-600" />
@@ -217,7 +217,7 @@ export default function UrlListCard({
                         onClick={() => setDeleteCandidate(item)}
                         disabled={disabled}
                         className="shrink-0 p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        aria-label="Deletar URL"
+                        aria-label="Delete URL"
                       >
                         <TrashIcon className="text-red-500 hover:text-red-600" />
                       </button>
@@ -250,7 +250,7 @@ export default function UrlListCard({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-950/50 px-4">
           <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-6 shadow-xl dark:border-gray-700 dark:bg-gray-800">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Deletar url?
+              Delete URL?
             </h3>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 truncate" title={deleteCandidate.originalUrl}>
               {deleteCandidate.originalUrl}
@@ -262,7 +262,7 @@ export default function UrlListCard({
                 disabled={deletingCode === deleteCandidate.code}
                 className="flex-1 h-10 rounded-full border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Cancelar
+                Cancel
               </button>
               <button
                 type="button"
@@ -270,7 +270,7 @@ export default function UrlListCard({
                 disabled={deletingCode === deleteCandidate.code}
                 className="flex-1 h-10 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {deletingCode === deleteCandidate.code ? "Deletando..." : "Deletar"}
+                {deletingCode === deleteCandidate.code ? "Deleting..." : "Delete"}
               </button>
             </div>
           </div>
