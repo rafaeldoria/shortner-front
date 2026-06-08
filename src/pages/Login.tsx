@@ -1,7 +1,7 @@
-import { useState, type ChangeEvent, type SubmitEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type SubmitEvent } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
-import { getApiError, setSession } from "../api/api";
+import { getApiError, hasSession, setSession } from "../api/api";
 import { login as loginApi } from "../api/auth";
 import { loginSchema, type LoginFormData } from "../schemas/authSchema";
 
@@ -36,6 +36,17 @@ export default function Login() {
   const noticeClass = verifiedStatus === "error"
     ? "text-red-500"
     : "text-green-600 dark:text-green-400";
+  const isAuthenticated = hasSession();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/home", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
+  if (isAuthenticated) {
+    return null;
+  }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -184,14 +195,14 @@ export default function Login() {
           )}
         </div>
 
-        <div className="mt-4 text-left">
+        {/* <div className="mt-4 text-left">
           <button
             type="button"
             className="text-sm text-indigo-400 hover:underline"
           >
             Forget password?
           </button>
-        </div>
+        </div> */}
 
         {loginError && (
           <p className="mt-4 text-sm font-medium text-red-500">
@@ -201,7 +212,7 @@ export default function Login() {
         <button
           type="submit"
           disabled={isLoading}
-          className="mt-2 w-full h-11 rounded-full text-white bg-indigo-600 hover:bg-indigo-500 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+          className="mt-6 w-full h-11 rounded-full text-white bg-indigo-600 hover:bg-indigo-500 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {isLoading ? "..." : "Login"}
         </button>
