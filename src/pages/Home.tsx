@@ -47,7 +47,7 @@ export default function Home() {
           return;
         }
 
-        setError("Erro ao carregar URLs.");
+        setError("Error loading URLs.");
       })
       .finally(() => setLoading(false));
   }, [navigate]);
@@ -66,7 +66,7 @@ export default function Home() {
       );
     } catch (err: unknown) {
       const { message } = getApiError(err);
-      throw new Error(message ?? "Erro ao salvar. Tente novamente.");
+      throw new Error(message ?? "Error saving. Try again.");
     }
   }
 
@@ -76,14 +76,14 @@ export default function Home() {
       setUrls((currentUrls) => currentUrls.filter((url) => url.code !== code));
     } catch (err: unknown) {
       const { message } = getApiError(err);
-      throw new Error(message ?? "Erro ao deletar. Tente novamente.");
+      throw new Error(message ?? "Error deleting. Try again.");
     }
   }
 
   if (loading) {
     return (
       <AppLayout authenticated>
-        <p className="text-gray-500 dark:text-gray-400">Carregando...</p>
+        <p className="text-gray-500 dark:text-gray-400">Loading...</p>
       </AppLayout>
     );
   }

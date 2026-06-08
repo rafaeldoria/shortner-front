@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Dark mode por classe no elemento raiz (controle manual pelo usuário) */
+/* Dark mode by class on the root element (manual user control) */
 @custom-variant dark (&:where(.dark, .dark *));
 
 html, body, #root {

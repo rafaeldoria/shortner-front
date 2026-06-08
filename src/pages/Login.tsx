@@ -27,11 +27,11 @@ export default function Login() {
   );
   const verifiedStatus = searchParams.get("verified");
   const noticeMessage = emailVerificationPending
-    ? "Verifique sua caixa de e-mail para validar sua conta."
+    ? "Check your inbox to verify your account."
     : verifiedStatus === "success"
-      ? "Conta validada com sucesso. Faça login para continuar."
+      ? "Account verified successfully. Sign in to continue."
       : verifiedStatus === "error"
-        ? "Link de validação inválido ou expirado."
+        ? "Verification link is invalid or expired."
         : null;
   const noticeClass = verifiedStatus === "error"
     ? "text-red-500"

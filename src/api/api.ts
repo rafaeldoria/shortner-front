@@ -29,7 +29,7 @@ export function getApiError(error: unknown): { status?: number; message?: string
   };
 }
 
-// Em dev usa proxy do Vite (evita CORS); em prod usa a URL da API
+// Dev uses the Vite proxy to avoid CORS; prod uses the API URL.
 const baseURL = import.meta.env.DEV ? '' : import.meta.env.VITE_API_URL;
 
 export const api = axios.create({

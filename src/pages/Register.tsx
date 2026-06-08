@@ -79,7 +79,7 @@ export default function Register() {
       });
     } catch (err: unknown) {
       const { message } = getApiError(err);
-      setSubmitError(message ?? "Erro ao cadastrar. Tente novamente.");
+      setSubmitError(message ?? "Error creating account. Try again.");
     } finally {
       setIsLoading(false);
     }
@@ -221,7 +221,7 @@ export default function Register() {
           disabled={isLoading}
           className="mt-6 w-full h-11 rounded-full text-white bg-indigo-600 hover:bg-indigo-500 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          {isLoading ? "Cadastrando..." : "Sign up"}
+          {isLoading ? "Creating account..." : "Sign up"}
         </button>
 
         <p className="text-gray-500 dark:text-gray-400 text-sm mt-3 mb-11">
